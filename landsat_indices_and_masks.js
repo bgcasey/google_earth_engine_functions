@@ -150,3 +150,4 @@ exports.createBinaryMask = function(image) {
   var binaryMask = image.select('NDRS').gt(0.5).rename('NDRS_stressed');
   return image.addBands([binaryMask]);
 };
+

@@ -1,6 +1,6 @@
 // Import the required module for Sentinel-2 indices calculations
 var s2_indices = require(
-  "users/bgcasey/functions:sentinel_indices"
+  "users/bgcasey/functions:sentinel_indices_and_masks"
 );
 
 /**

@@ -1,6 +1,6 @@
 // Import the landsat functions module
 var landsat = require(
-  "users/bgcasey/functions:landsat_indices"
+  "users/bgcasey/functions:landsat_indices_and_masks"
 );
 
 /**
