@@ -41,3 +41,18 @@ vignettes/*.pdf
 .gee_git_clone.sh
 
 depricated/
+
+
+# geomorpho90m.js
+HLI.js
+landcover_proportions.js
+# landsat_indices.js
+# landsat_time_series.js
+masks.js
+misc.js
+# sentinel_indices.js
+# sentinel_time_series.js
+timeseries_functions.js
+topoFunctions.js
+TPI.js
+utils.js
