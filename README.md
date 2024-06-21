@@ -6,19 +6,19 @@ This repository contains a collection of reusable functions for processing and a
 
 ## File Index
 
-### [geomorpho90m.js](https://github.com/bgcasey/google_earth_engine_functions/blob/main/geomorpho90m.js)
+#### [geomorpho90m.js](https://github.com/bgcasey/google_earth_engine_functions/blob/main/geomorpho90m.js)
 This script loads multiple geomorphometric variables from the 
 Geomorpho90m dataset, mosaics them, clips them to a specified area 
 of interest (aoi), and combines them into a single multiband image.
 
-### [landsat_indices.js](https://github.com/bgcasey/google_earth_engine_functions/blob/main/landsat_indices.js)
+#### [landsat_indices.js](https://github.com/bgcasey/google_earth_engine_functions/blob/main/landsat_indices.js)
 Calculates various spectral indices from Landsat imagery, such as NDVI, EVI, and NDWI.
 
-### [landsat_time_series.js](https://github.com/bgcasey/google_earth_engine_functions/blob/main/landsat_time_series.js)
+#### [landsat_time_series.js](https://github.com/bgcasey/google_earth_engine_functions/blob/main/landsat_time_series.js)
 Function to process a time series of Landsat 5 and Landsat 7 images, calculate indices, and merge them into a single collection.
 
-### [sentinel_indices.js](https://github.com/bgcasey/google_earth_engine_functions/blob/main/sentinel_indices.js)
+#### [sentinel_indices.js](https://github.com/bgcasey/google_earth_engine_functions/blob/main/sentinel_indices.js)
 Calculates spectral indices from Sentinel-2 imagery. 
 
-### [sentinel_time_series.js](https://github.com/bgcasey/google_earth_engine_functions/blob/main/sentinel_time_series.js)
+#### [sentinel_time_series.js](https://github.com/bgcasey/google_earth_engine_functions/blob/main/sentinel_time_series.js)
 Function to process a time series of Sentinel-2 images, calculate indices, and merge them into a single collection.
