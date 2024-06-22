@@ -22,3 +22,10 @@ Functions to calculate  spectral indices from Sentinel-2 imagery.
 
 #### [sentinel_time_series.js](https://github.com/bgcasey/google_earth_engine_functions/blob/main/sentinel_time_series.js)
 Function to process a time series of Sentinel-2 images, calculate indices, and merge them into a single collection.
+
+#### [utils.js](https://github.com/bgcasey/google_earth_engine_functions/blob/main/utils.js)
+Assorted utility functions e.g.:
+- convert degrees to radians
+- combine lists of images into a single multi-band image
+- create time intervals
+- normalize images
