@@ -1,3 +1,15 @@
+/**
+ * Title: Landsat Indices and Masks Functions
+ * Date: 2024-06-01
+ * Author: Brendan Casey
+ * 
+ * Summary:
+ * This script defines functions to calculate various spectral 
+ * indices and apply masks to Landsat images. The indices 
+ * include vegetation, moisture, and stress-related indices. 
+ * Masks are used for cloud, snow, and QA filtering.
+ */
+
 // Define Landsat indices functions
 
 /**
@@ -213,6 +225,38 @@ exports.addSnow = function(image) {
 
 
 
+
+/**
+ * Masks a Landsat image based on QA_RADSAT Bit 9.
+ * Bit 9: 0 = Pixel present, 1 = Detector doesn't have a value
+ * @param {ee.Image} image - The Landsat image to mask.
+ * @return {ee.Image} The masked image.
+ */
+exports.mask_qa9 = function(image) {
+  // Extract the QA_RADSAT band.
+  var qaBand = image.select('QA_RADSAT');
+
+  // Bit 9 is used to indicate pixels that are present (0) or where the detector doesn't have a value (1).
+  // Create a mask to identify pixels with Bit 9 set to 0.
+  var mask = qaBand.bitwiseAnd(1 << 9).eq(0);
+
+  // Apply the mask to the image, keeping only pixels where Bit 9 is 0.
+  return image.updateMask(mask);
+}
+
+exports.maskFill = function(image) {
+  // Get the pixel QA band.
+  var qa = image.select('QA_PIXEL');
+
+  // Bit 0, when set to 0, indicates a valid pixel; when set to 1, indicates a fill pixel.
+  var mask = qa.bitwiseAnd(1).eq(0);
+
+  // Update the image mask to exclude fill pixels.
+  return image.updateMask(mask);
+}
+
+
+
 // Create a binary mask for identifying stressed forest pixels
 // based on the NDRS index.
 
@@ -224,6 +268,7 @@ var bandName = 'NDRS';
 var threshold = 0.5;
 
 /**
+ * Stressed forest pixels
  * Creates a binary mask to identify stressed forest pixels.
  * Masks out non-forest pixels, applies a threshold to the NDRS band.
  * Pixels above the threshold are considered stressed.
@@ -231,7 +276,7 @@ var threshold = 0.5;
  * @param {Object} image - The image to process.
  * @returns {Object} Image with an added binary mask band ('NDRS_stressed').
  */
-exports.createBinaryMask = function(image) {
+exports.NDRS_stressed = function(image) {
   // Mask non-forest pixels, replace with zero for continuous raster
   var maskedImage = masks.maskByLandcover(image).unmask(0);
 
@@ -245,4 +290,36 @@ exports.createBinaryMask = function(image) {
   var imageWithMask = image.addBands(binaryMask);
 
   return imageWithMask;
+};
+
+/**
+ * Apply scaling factors to Landsat images 
+ * 
+ * @param {ee.Image} image - The input Landsat image to be scaled.
+ *                           Expected to contain bands named
+ *                           according to the standard Landsat
+ *                           naming convention (e.g., 'SR_B.' for
+ *                           surface reflectance bands and 'ST_B6'
+ *                           for the thermal band).
+ * 
+ * @returns {ee.Image} - The input image with optical and thermal
+ *                       bands scaled. 
+ */
+exports.applyScaleFactors = function(image) {
+  // Apply scaling factors to optical bands
+  // Optical bands are multiplied by 0.0000275 and then have
+  // 0.2 subtracted from them
+  var opticalBands = image.select('SR_B.')
+                          .multiply(0.0000275).add(-0.2);
+  
+  // Apply scaling factor to thermal band (ST_B6)
+  // The thermal band is multiplied by 0.00341802 and then has
+  // 149.0 added to it
+  var thermalBand = image.select('ST_B6')
+                         .multiply(0.00341802).add(149.0);
+  
+  // Add the scaled bands back to the image, replacing the
+  // original bands
+  return image.addBands(opticalBands, null, true)
+              .addBands(thermalBand, null, true);
 };
