@@ -31,7 +31,7 @@ var landsat = require("users/bgcasey/functions:landsat_indices_and_masks");
 /**
  * Function to harmonizes Landsat 8 or 9 (OLI) to Landsat 7 (ETM+) spectral
  * reflectance values using reduced major axis (RMA) regression
- * coefficients.
+ * coefficients. Adapted from script written by Jennifer Hird. 
  * 
  * Citation: Roy, D.P., Kovalskyy, V., Zhang, H.K., Vermote, E.F., 
  * Yan, L., Kumar, S.S, Egorov, A., 2016, Characterization of Landsat-7 
@@ -77,6 +77,8 @@ var getHarmonizedSRCollection = function(startDate, endDate, sensor, aoi) {
   var srCollection = ee.ImageCollection('LANDSAT/' + sensor + '/C02/T1_L2')
                        .filterBounds(aoi)
                        .filterDate(startDate, endDate);
+                      // .map(landsat.mask_cloud_snow); // apply cloud and snow mask
+
   
   // Apply harmonization to Landsat 8 or 9 images
   if (sensor === 'LC08' || sensor === 'LC09') {
@@ -197,6 +199,7 @@ exports.ls_fn = function(dates, interval, intervalType, aoi, selectedIndices) {
     
     // Return median of collection with metadata
     return combinedCollection
+      .select(selectedIndices)
       .median()
       .set({
         "start_date": start.format('YYYY-MM-dd'), 
@@ -215,40 +218,56 @@ exports.ls_fn = function(dates, interval, intervalType, aoi, selectedIndices) {
 };
 
 
-// Example use
-// // Import the required module
-// var landsat = require(
+// Usage example of l2_fn
+
+// // Load function
+// var landsat_time_series = require(
 //   "users/bgcasey/functions:landsat_time_series"
 // );
 
-// // Define the dates for the analysis
-// var dates = ['2020-01-01', '2020-02-01']; // Example dates
+// // Define the AOI as an ee.Geometry object
+// var aoi = ee.Geometry.Polygon([
+//   [
+//     [-113.60000044487279, 55.15000133914695],
+//     [-113.60000044487279, 55.35000089418191],
+//     [-113.15000137891523, 55.35000086039801],
+//     [-113.15000138015347, 55.15000133548429],
+//     [-113.60000044487279, 55.15000133914695]
+//   ]
+// ]);
 
-// // Define the interval in months
-// var interval = 1; // Monthly interval
-// var intervalType = 'months'
-// // Define the AOI as a GeoJSON geometry or an ee.Geometry object
-// // Example: AOI as a rectangle (replace with actual AOI)
-// var aoi = ee.Geometry.Rectangle(
-//   [-123.262, 44.574, -122.774, 45.656]
-// );
+// // Define the dates for the analysis
+// var dates = ['2022-01-01', '2023-01-01', '2024-01-01'];
+
+// // Define the interval and interval type
+// var interval = 12; // 12 months interval
+// var intervalType = 'months';
 
 // // Define which indices to calculate
-// var selectedIndices = ['NDVI', 'EVI', 'SAVI']; // Calculate these indices
+// // Available Indices: BSI, DRS, DSWI, EVI, LAI, NDMI, NDVI, SAVI, SI
+// var selectedIndices = ['NDVI'];
 
-// // Call ls_fn with specified parameters
-// var combinedImageCollection = landsat.ls_fn(
+// // Call s2_fn with specified parameters
+// var landsatCollection = landsat_time_series.ls_fn(
 //   dates, interval, intervalType, aoi, selectedIndices
 // );
+// print('Landsat Image Collection:', landsatCollection);
 
-// // Print the result to the console (Google Earth Engine Code Editor)
-// print('Combined Image Collection:', combinedImageCollection);
+// // Define visualization parameters for the NDVI band
+// var ndviVis = {
+//   min: -1,
+//   max: 1,
+//   palette: ['red', 'yellow', 'green']
+// };
 
-// // Add result to the map (Google Earth Engine Code Editor)
-// // Assumes indices produce visualizable layers; adjust as needed.
-// Map.addLayer(
-//   combinedImageCollection.median(), 
-//   {bands: 'NDVI', min: 0, max: 1}, 
-//   'Median NDVI'
-// );
-// Map.centerObject(aoi);
+// // Center the map on the AOI
+// Map.centerObject(aoi, 10);
+
+// // Add the NDVI layers for each year to the map
+// dates.forEach(function(date) {
+//   var year = ee.Date(date).get('year').getInfo();
+//   var image = landsatCollection.filter(
+//     ee.Filter.eq('year', year)
+//   ).first().select('NDVI');
+//   Map.addLayer(image, ndviVis, 'NDVI ' + year);
+// });
