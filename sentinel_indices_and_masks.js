@@ -1,17 +1,27 @@
-// Sentinel 2 Indices
-
+/**
+ * Title: Sentinel-2 Indices and Masks Functions
+ * Date: 2024-06-01
+ * Author: Brendan Casey
+ * 
+ * Summary:
+ * This script defines functions to calculate various spectral 
+ * indices and apply masks to a time series of Sentinel-2 images. 
+ * The indices include vegetation, moisture, and stress-related 
+ * indices. Masks are used for cloud, snow, and QA filtering.
+ */
 /**
  * Adds Disease Stress Water Index (DSWI) band to an image.
  * @param {ee.Image} image - The input image.
  * @returns {ee.Image} The image with the added DSWI band.
  */
+ 
 exports.addDSWI = function(image) {
   var DSWI = image.expression(
     '(NIR + Green) / (Red + SWIR)', {
       'NIR': image.select('B8'),
       'Green': image.select('B3'),
       'Red': image.select('B4'),
-      'SWIR': image.select('B11'),
+      'SWIR': image.select('B11'),  
     }).rename('DSWI');
   return image.addBands([DSWI]);
 };
@@ -136,3 +146,24 @@ exports.addRDI = function(image) {
     }).rename('RDI');
   return image.addBands([RDI]);
 };
+
+
+
+/**
+ * Function to mask clouds using the Sentinel-2 QA band
+ * @param {ee.Image} image Sentinel-2 image
+ * @return {ee.Image} cloud masked Sentinel-2 image
+ */
+exports.maskS2clouds = function(image) {
+  var qa = image.select('QA60');
+
+  // Bits 10 and 11 are clouds and cirrus, respectively.
+  var cloudBitMask = 1 << 10;
+  var cirrusBitMask = 1 << 11;
+
+  // Both flags should be set to zero, indicating clear conditions.
+  var mask = qa.bitwiseAnd(cloudBitMask).eq(0)
+      .and(qa.bitwiseAnd(cirrusBitMask).eq(0));
+
+  return image.updateMask(mask).divide(10000);
+}
