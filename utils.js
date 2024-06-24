@@ -110,3 +110,56 @@ exports.normalizeImage = function (img, optionalParameters) {
 
   return img.subtract(min).divide(max.subtract(min));
 };
+
+
+
+/**
+ * Generates a list of dates for time series analysis, starting
+ * from the first day of each month within a specified date range.
+ * The interval between dates is defined by the `interval` and
+ * `intervalType` parameters.
+ *
+ * @param {ee.Date} Date_Start - The start date of the time series.
+ * @param {ee.Date} Date_End - The end date of the time series.
+ * @param {number} interval - Units to skip between dates in series.
+ * @param {string} intervalType - Type of interval ('months', 'weeks',
+ *                                'days', 'years').
+ * @returns {ee.List} A list of dates for the time series.
+ */
+exports.createDateList = function createDateList(Date_Start, Date_End, interval,
+                                  intervalType) {
+  // Calculate total intervals between start and end dates
+  var n_intervals = Date_End.difference(Date_Start, intervalType)
+                     .round();
+  
+  // Generate sequence of numbers from 0 to n_intervals, step by interval
+  var dates = ee.List.sequence(0, n_intervals, interval);
+  
+  // Function to advance start date by n intervals
+  var make_datelist = function(n) {
+    return Date_Start.advance(n, intervalType);
+  };
+  
+  // Apply function to each number in sequence for dates list
+  dates = dates.map(make_datelist);
+  
+  return dates;
+}
+
+// Example usage of createTimeSeriesDateList function
+
+// var utils = require("users/bgcasey/functions:utils");
+
+// // Define the start and end dates for the time series
+// var Date_Start = ee.Date('2020-01-01');
+// var Date_End = ee.Date('2020-12-31');
+
+// // Define the interval and interval type for the time series
+// var interval = 1; // Every 1 unit of intervalType
+// var intervalType = 'months'; // Interval type is months
+
+// // Call the createDateList function to generate the list
+// var dateList = utils.createDateList(Date_Start, Date_End, interval, intervalType);
+
+// // Print the generated list of dates for the time series
+// print('Generated list of dates:', dateList);
