@@ -31,7 +31,7 @@ var landsat = require("users/bgcasey/functions:landsat_indices_and_masks");
 /**
  * Function to harmonizes Landsat 8 or 9 (OLI) to Landsat 7 (ETM+) spectral
  * reflectance values using reduced major axis (RMA) regression
- * coefficients.
+ * coefficients. Adapted from script written by Jennifer Hird. 
  * 
  * Citation: Roy, D.P., Kovalskyy, V., Zhang, H.K., Vermote, E.F., 
  * Yan, L., Kumar, S.S, Egorov, A., 2016, Characterization of Landsat-7 
@@ -66,7 +66,8 @@ var harmonize_OLI_to_ETM = function(image) {
 /**
  * Retrieves and harmonizes a Landsat Surface Reflectance (SR) sensor 
  * collection for a given time period and area of interest (AOI).
- * 
+ * Adapted from script written by Jennifer Hird. 
+ *
  * @param {string} startDate - The start date for the collection.
  * @param {string} endDate - The end date for the collection.
  * @param {string} sensor - The Landsat sensor code (e.g., 'LC08').
