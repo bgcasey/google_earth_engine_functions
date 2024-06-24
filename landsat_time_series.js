@@ -66,7 +66,7 @@ var harmonize_OLI_to_ETM = function(image) {
 /**
  * Retrieves and harmonizes a Landsat Surface Reflectance (SR) sensor 
  * collection for a given time period and area of interest (AOI).
- * 
+ *
  * @param {string} startDate - The start date for the collection.
  * @param {string} endDate - The end date for the collection.
  * @param {string} sensor - The Landsat sensor code (e.g., 'LC08').
