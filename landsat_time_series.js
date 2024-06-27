@@ -193,6 +193,9 @@ exports.ls_fn = function(dates, interval, intervalType, aoi, selectedIndices) {
         case 'DRS':
           combinedCollection = combinedCollection.map(landsat.addDRS);
           break;
+        case 'NDRS':
+          combinedCollection = combinedCollection.map(landsat.addNDRS);
+          break;  
         // Additional indices can be added here
       }
     });

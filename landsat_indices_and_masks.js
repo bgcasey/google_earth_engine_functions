@@ -9,6 +9,7 @@
  * The indices include vegetation, moisture, and stress-related 
  * indices. Masks are used for cloud, snow, and QA filtering.
  */
+// var utils = require("users/bgcasey/functions:utils");
 
 // Define Landsat indices functions
 
@@ -139,15 +140,82 @@ exports.addNDVI = function(image) {
  * @param {Object} image - The image to process.
  * @returns {Object} The image with the NDRS band added.
  */
+// exports.addNDRS = function(image) {
+//   var NDRS = image.expression(
+//     '(DRS - DRSmin) / (DRSmax - DRSmin)', {
+//       'DRS': image.select('DRS'),
+//       'DRSmin': DRSmin, // minimum DRS value
+//       'DRSmax': DRSmax  // maximum DRS value
+//     }).rename('NDRS');
+//   return image.addBands([NDRS]);
+// };
+
+
+
+/**
+ * Adds Normalized Difference Restoration Index (NDRS) band 
+ * to an image. Assumes the presence of a DRS band and applies 
+ * a forest mask to get min and max DRS of forested pixels.
+ * It calls a function that gets forest data from
+ * https://gee-community-catalog.org/projects/ca_lc/.
+ * 
+ * @param {Object} image - The image to process.
+ * @returns {Object} The image with the NDRS band added.
+ */
+ 
 exports.addNDRS = function(image) {
+  // Define the area of interest (AOI) using the image's geometry
+  var aoi = image.geometry();
+  
+  // Extract the year from the image properties
+  var year = ee.Number.parse(image.get('year'));
+  
+  // Define start and end dates based on the year
+  var startDate = ee.Date(ee.Algorithms.If(
+    year.gt(2019), '2019-01-01', image.get('start_date')));
+  var endDate = ee.Date(ee.Algorithms.If(
+    year.gt(2019), '2019-12-31', image.get('end_date')));
+
+  // Load landcover data for the specified period
+  var forest_lc = require(
+    "users/bgcasey/functions:annual_forest_land_cover");
+  var lcCollection = forest_lc.lc_fn(startDate, endDate, aoi);
+  var landcoverImage = ee.Image(lcCollection.first())
+    .select('forest_lc_class');
+  
+  // Create a mask for forest pixels
+  var forestMask = landcoverImage.remap([210, 220, 230], [1, 1, 1], 0);
+
+  // Apply the forest mask to the DRS band
+  var DRS = image.select('DRS');
+  var maskedDRS = DRS.updateMask(forestMask);
+  
+  // Calculate min and max of DRS for forest pixels
+  var minMax = maskedDRS.reduceRegion({
+    reducer: ee.Reducer.minMax(),
+    geometry: aoi.bounds(),
+    scale: 1000,
+    maxPixels: 1e10,
+    bestEffort: true,
+    tileScale: 8
+  });
+  
+  // Extract the min and max values
+  var DRSmin = ee.Number(minMax.get('DRS_min'));
+  var DRSmax = ee.Number(minMax.get('DRS_max'));
+  
+  // Calculate NDRS using the min and max values
   var NDRS = image.expression(
     '(DRS - DRSmin) / (DRSmax - DRSmin)', {
-      'DRS': image.select('DRS'),
-      'DRSmin': 0, // Placeholder value
-      'DRSmax': 1  // Placeholder value
+      'DRS': DRS,
+      'DRSmin': DRSmin,
+      'DRSmax': DRSmax
     }).rename('NDRS');
-  return image.addBands([NDRS]);
+  
+  // Add the NDRS band to the image
+  return image.addBands(NDRS);
 };
+
 
 /**
  * Adds Soil Adjusted Vegetation Index (SAVI) band to an image.

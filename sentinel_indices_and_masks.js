@@ -81,42 +81,66 @@ exports.addNDWI = function(image) {
   return image.addBands([NDWI]);
 };
 
-/**
- * Adds Normalized distance red & SWIR (NDRS) band to an image.
- * @param {ee.Image} image - The input image.
- * @returns {ee.Image} The image with the added NDRS band.
- */
-exports.addNDRS = function(image) {
-  var masks = require("users/bgcasey/functions:masks");
+// exports.addNDRS = function(image) {
+//   // Ensure the DRS band is present
+//   var hasDRS = image.bandNames().contains('DRS');
+//   image = ee.Image(ee.Algorithms.If(hasDRS, image, ee.Image.constant(0).rename('DRS')));
 
-  var maskedImage = masks.maskByLandcover(image);
-  var imageGeometry = image.geometry();
+//   // Define the area of interest (AOI) using the image's geometry
+//   var aoi = image.geometry();
 
-  var max = maskedImage.select('DRS').reduceRegion({
-    reducer: ee.Reducer.max(),
-    geometry: imageGeometry,
-    scale: 10,
-    bestEffort: true,
-    tileScale: 8
-  });
+//   // Extract the year from the image properties
+//   var year = ee.Number.parse(image.get('year'));
 
-  var min = maskedImage.select('DRS').reduceRegion({
-    reducer: ee.Reducer.min(),
-    geometry: imageGeometry,
-    scale: 10,
-    bestEffort: true, 
-    tileScale: 8
-  });
+//   // Define start and end dates based on the year
+//   var startDate = ee.Date(ee.Algorithms.If(
+//     year.gt(2019), '2019-01-01', image.get('start_date')));
+//   var endDate = ee.Date(ee.Algorithms.If(
+//     year.gt(2019), '2019-12-31', image.get('end_date')));
 
-  var NDRS = image.expression(
-    '(DRS - DRSmin) / (DRSmax - DRSmin)', {
-      'DRS': image.select('DRS'),
-      'DRSmin': ee.Number(min.get('DRS')),
-      'DRSmax': ee.Number(max.get('DRS'))
-    }).rename('NDRS');
+//   // Load landcover data for the specified period
+//   var forest_lc = require(
+//     "users/bgcasey/functions:annual_forest_land_cover");
+//   var lcCollection = forest_lc.lc_fn(startDate, endDate, aoi);
+//   var landcoverImage = ee.Image(lcCollection.first())
+//     .select('forest_lc_class');
 
-  return image.addBands(NDRS);
-};
+//   // Create a mask for forest pixels
+//   var forestMask = landcoverImage.remap([210, 220, 230], [1, 1, 1], 0);
+
+//   // Apply the forest mask to the DRS band
+//   var DRS = image.select('DRS');
+//   var maskedDRS = DRS.updateMask(forestMask);
+
+//   // Calculate min and max of DRS for forest pixels
+//   var minMax = maskedDRS.reduceRegion({
+//     reducer: ee.Reducer.minMax(),
+//     geometry: aoi.bounds(),
+//     scale: 1000,
+//     maxPixels: 1e10,
+//     bestEffort: true,
+//     tileScale: 8
+//   });
+
+//   // Extract the min and max values
+//   var DRSmin = ee.Number(minMax.get('DRS_min'));
+//   var DRSmax = ee.Number(minMax.get('DRS_max'));
+
+//   // Ensure min and max are valid numbers
+//   DRSmin = ee.Algorithms.If(DRSmin, DRSmin, 0);
+//   DRSmax = ee.Algorithms.If(DRSmax, DRSmax, 1);
+
+//   // Calculate NDRS using the min and max values
+//   var NDRS = image.expression(
+//     '(DRS - DRSmin) / (DRSmax - DRSmin)', {
+//       'DRS': DRS,
+//       'DRSmin': ee.Number(DRSmin),
+//       'DRSmax': ee.Number(DRSmax)
+//     }).rename('NDRS');
+
+//   // Add the NDRS band to the image
+//   return image.addBands(NDRS);
+// };
 
 /**
  * Creates a binary mask based on the NDRS threshold to 
