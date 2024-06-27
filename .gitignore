@@ -38,7 +38,7 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
-.gee_git_clone.sh
+0_gee_git_clone.sh
 
 depricated/
 
