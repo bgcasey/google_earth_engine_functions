@@ -163,3 +163,108 @@ exports.createDateList = function createDateList(Date_Start, Date_End, interval,
 
 // // Print the generated list of dates for the time series
 // print('Generated list of dates:', dateList);
+
+
+
+
+/**
+ * Function to get min and max visualization parameters for a band in an image.
+ * 
+ * @param {ee.Image} image - The image containing the band.
+ * @param {String} band - The name of the band.
+ * @param {ee.Geometry} aoi - The area of interest.
+ * @param {Number} scale - The scale for the reduceRegion operation.
+ * @returns {Object} An object with min and max visualization parameters.
+ */
+exports.getVisParams = function getVisParams(image, band, aoi, scale) {
+  var stats = image.select(band).reduceRegion({
+    reducer: ee.Reducer.minMax(),
+    geometry: aoi,
+    scale: scale,
+    bestEffort: true,
+    tileScale: 8
+  });
+
+  var min = stats.get(band + '_min').getInfo();
+  var max = stats.get(band + '_max').getInfo();
+
+  return {
+    min: min,
+    max: max,
+    palette: ['red', 'yellow', 'green']
+  };
+}
+
+
+// Example usage:
+
+// // Get visualization parameters for NDVI
+// var ndviVis = getVisParamsForImage(imageWithNDVI, 'NDVI', aoi, 10);
+
+// // Add the NDVI layer to the map
+// Map.addLayer(imageWithNDVI.select('NDVI'), ndviVis, 'NDVI');
+// Map.centerObject(aoi, 10);
+
+
+
+/**
+ * Function to split an AOI into rectangular tiles.
+ * 
+ * @param {ee.Geometry} aoi - The area of interest.
+ * @param {number} tileSize - Side length of each tile, in meters.
+ * @return {ee.List} Tiles as ee.Geometry.Rectangle objects.
+ */
+exports.splitAOIIntoTiles = function(aoi, tileSize) {
+  // Ensure AOI is a valid geometry
+  aoi = ee.Geometry(aoi);
+
+  // Get bounds of the AOI and its coordinates
+  var bounds = aoi.bounds();
+  var coords = ee.List(bounds.coordinates().get(0));
+
+  // Extract corner coordinates as points
+  var bottomLeft = ee.Geometry.Point(coords.get(0));
+  var topRight = ee.Geometry.Point(coords.get(2));
+  
+  // Calculate width and height of the AOI in meters
+  var aoiWidth = bottomLeft.distance(
+    ee.Geometry.Point([
+      topRight.coordinates().get(0), 
+      bottomLeft.coordinates().get(1)
+    ])
+  );
+  var aoiHeight = bottomLeft.distance(
+    ee.Geometry.Point([
+      bottomLeft.coordinates().get(0), 
+      topRight.coordinates().get(1)
+    ])
+  );
+  
+  // Calculate number of tiles needed horizontally and vertically
+  var numTilesX = aoiWidth.divide(tileSize).ceil();
+  var numTilesY = aoiHeight.divide(tileSize).ceil();
+  
+  // Create a list to hold the tiles
+  var tiles = ee.List([]);
+
+  // Generate the tiles
+  tiles = ee.List.sequence(0, numTilesX.subtract(1)).map(function(i) {
+    return ee.List.sequence(0, numTilesY.subtract(1)).map(function(j) {
+      // Calculate tile's bottom left corner coordinates
+      var x = ee.Number(bottomLeft.coordinates().get(0))
+              .add(ee.Number(i).multiply(tileSize));
+      var y = ee.Number(bottomLeft.coordinates().get(1))
+              .add(ee.Number(j).multiply(tileSize));
+      
+      // Create the tile geometry
+      return ee.Geometry.Rectangle([
+        x, y, x.add(tileSize), y.add(tileSize)
+      ]);
+    });
+  }).flatten();
+
+  return tiles;
+};
+
+
+
