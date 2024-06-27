@@ -1,10 +1,23 @@
-// High-resolution annual forest land cover maps for Canada's forested ecosystems (1984-2019)
-// Citation: Hermosilla, T., Wulder, M.A., White, J.C., Coops, N.C., 2022. Land cover classification in an era of big and open data: Optimizing localized
-// implementation and training data selection to improve mapping outcomes. Remote Sensing of Environment. No. 112780.
-// DOI: https://doi.org/10.1016/j.rse.2022.112780 [Open Access]
+/**
+ * Title: Get annual forest landcover classes
+ * Author: Brendan Casey
+ * Date: 2023-04-01
+ * 
+ * Description: Function to get annual landcover data from 
+ * High-resolution Annual Forest Land Cover Maps for
+ * Canada's Forested Ecosystems (1984-2019)
+ * 
+ * Citation: Hermosilla, T., Wulder, M.A., White, J.C.,
+ * Coops, N.C., 2022. Land cover classification in an era
+ * of big and open data: Optimizing localized implementation
+ * and training data selection to improve mapping outcomes.
+ * Remote Sensing of Environment. No. 112780.
+ * DOI: https://doi.org/10.1016/j.rse.2022.112780 [Open Access]
+ */
 
 /**
- * Function to process Sentinel-2 images within a date range and area of interest.
+ * Function to process Sentinel-2 images within a date range and area
+ * of interest.
  * 
  * @param {string} startDate - Start date string for the image collection.
  * @param {string} endDate - End date string for the image collection.
@@ -12,10 +25,10 @@
  * @returns {ee.ImageCollection} - Processed images clipped to AOI.
  */
 exports.lc_fn = function(startDate, endDate, aoi) {
-
   // Get Sentinel-2 collection for the date range
-  var lcCollection = ee.ImageCollection('projects/sat-io/open-datasets/CA_FOREST_LC_VLCE2')
-                        .filterDate(startDate, endDate);
+  var lcCollection = ee.ImageCollection(
+    'projects/sat-io/open-datasets/CA_FOREST_LC_VLCE2'
+  ).filterDate(startDate, endDate);
 
   // Apply area of interest (AOI) filter if provided
   if (aoi) {
@@ -39,11 +52,6 @@ exports.lc_fn = function(startDate, endDate, aoi) {
 };
 
 // Usage example
-
-// // Load function
-// var forest_lc = require(
-//     "users/bgcasey/functions:annual_forest_land_cover"
-// );
 
 // // Define the AOI as an ee.Geometry object
 // var aoi = ee.Geometry.Polygon([
@@ -75,22 +83,22 @@ exports.lc_fn = function(startDate, endDate, aoi) {
 // print("Reclassed values:");
 // print({"from": from, "to": to});
 
-// // Define a dictionary which will be used to make legend and visualize image on map
+// // Define a dictionary for legend and visualization
 // var dict = {
 //   "names": [
-//   "Unclassified",
-//   "Water",
-//   "Snow/Ice",
-//   "Rock/Rubble",
-//   "Exposed/Barren land",
-//   "Bryoids",
-//   "Shrubs",
-//   "Wetland",
-//   "Wetland-treed",
-//   "Herbs",
-//   "Coniferous",
-//   "Broadleaf",
-//   "Mixedwood"
+//     "Unclassified",
+//     "Water",
+//     "Snow/Ice",
+//     "Rock/Rubble",
+//     "Exposed/Barren land",
+//     "Bryoids",
+//     "Shrubs",
+//     "Wetland",
+//     "Wetland-treed",
+//     "Herbs",
+//     "Coniferous",
+//     "Broadleaf",
+//     "Mixedwood"
 //   ],
 //   "colors": [
 //     "#686868",
@@ -106,7 +114,8 @@ exports.lc_fn = function(startDate, endDate, aoi) {
 //     "#006600",
 //     "#00cc00",
 //     "#cc9900"
-//   ]};
+//   ]
+// };
 
 // // Create a panel to hold the legend widget
 // var legend = ui.Panel({
@@ -118,7 +127,6 @@ exports.lc_fn = function(startDate, endDate, aoi) {
 
 // // Function to generate the legend
 // function addCategoricalLegend(panel, dict, title) {
-
 //   // Create and add the legend title.
 //   var legendTitle = ui.Label({
 //     value: title,
@@ -140,7 +148,6 @@ exports.lc_fn = function(startDate, endDate, aoi) {
 //     var colorBox = ui.Label({
 //       style: {
 //         backgroundColor: color,
-//         // Use padding to give the box height and width.
 //         padding: '8px',
 //         margin: '0 0 4px 0'
 //       }
@@ -168,13 +175,7 @@ exports.lc_fn = function(startDate, endDate, aoi) {
 //   }
 
 //   Map.add(panel);
-
 // }
-
-
-// /*
-//   // Display map and legend ///////////////////////////////////////////////////////////////////////////////
-// */
 
 // // Add the legend to the map
 // addCategoricalLegend(legend, dict, 'CA Annual forest LC map');
@@ -182,7 +183,9 @@ exports.lc_fn = function(startDate, endDate, aoi) {
 // Map.centerObject(aoi, 10)
 
 // // Add image to the map
-// Map.addLayer(ca_lc_last.mask(ca_lc_last.neq(0)), {min:0, max:12, palette:dict['colors']}, 'CA Annual forest LC map 2019')
+// Map.addLayer(ca_lc_last.mask(ca_lc_last.neq(0)), {
+//   min:0, max:12, palette:dict['colors']
+// }, 'CA Annual forest LC map 2019');
 
 
 
@@ -192,158 +195,3 @@ exports.lc_fn = function(startDate, endDate, aoi) {
 
 
 
-
-
-
-
-// // Center the map on the AOI
-// Map.centerObject(aoi, 10);
-
-// // Define visualization parameters for the NDVI band
-// var ndviVis = {
-//   min: -1,
-//   max: 1,
-//   palette: ['red', 'yellow', 'green']
-// };
-
-// // Add the NDVI layers for each year to the map
-// ee.List.sequence(2022, 2024).getInfo().forEach(function(year) {
-//   var image = sentinel2Collection.filter(ee.Filter.calendarRange(year, year, 'year')).first().select('NDVI');
-//   Map.addLayer(image, ndviVis, 'NDVI ' + year);
-// });
-
-
-
-
-
-
-
-
-
-
-// // feature_collection are the features you are extracting landcover data to 
-// exports.Landcover_ts = function(feature_collection, Date_Start, Date_End) {
-//       var LC = ee.ImageCollection('projects/sat-io/open-datasets/CA_FOREST_LC_VLCE2').
-//       filterDate(Date_Start, Date_End);
-      
-//       // choose reducers
-//       var reducers = ee.Reducer.count().combine({
-//         reducer2: ee.Reducer.frequencyHistogram(),
-//         sharedInputs: true
-//       });
-      
-//       var LC_1 = LC.map(function(img) {
-//         return img.reduceRegions({
-//           collection: feature_collection,
-//           reducer: reducers, // set the names of output properties to the corresponding band names
-//           scale: 30,
-//           tileScale: 2
-//         }).map(function (feature) {
-//                   var histogramResults = ee.Dictionary(feature.get('histogram'));
-//                   var pixel_count= ee.Number(feature.get('count'))
-//             return feature.copyProperties(img, ['system:time_start']) //to get year properties from the stack
-//                   .set(// get proportion of landcover from histogram 
-//                       // by dividing histogram pixel values by the total pixel_count.
-//                       'Unclassified', ee.Number(histogramResults.get('0', 0)).divide(pixel_count),
-//                       'Water', ee.Number(histogramResults.get('20', 0)).divide(pixel_count),
-//                       'Snow_Ice', ee.Number(histogramResults.get('31', 0)).divide(pixel_count),
-//                       'Rock_Rubble', ee.Number(histogramResults.get('32', 0)).divide(pixel_count),
-//                       'Exposed_Barren_land', ee.Number(histogramResults.get('33', 0)).divide(pixel_count),
-//                       'Bryoids', ee.Number(histogramResults.get('40', 0)).divide(pixel_count),
-//                       'Shrubs', ee.Number(histogramResults.get('50', 0)).divide(pixel_count),
-//                       'Wetland', ee.Number(histogramResults.get('80', 0)).divide(pixel_count),
-//                       'Wetland-treed', ee.Number(histogramResults.get('81', 0)).divide(pixel_count),
-//                       'Herbs', ee.Number(histogramResults.get('100', 0)).divide(pixel_count),
-//                       'Coniferous', ee.Number(histogramResults.get('210', 0)).divide(pixel_count),
-//                       'Broadleaf', ee.Number(histogramResults.get('220', 0)).divide(pixel_count),
-//                       'Mixedwood', ee.Number(histogramResults.get('230', 0)).divide(pixel_count),
-//                       'landcover_yr', img.date().format('YYYY'));
-//         })
-//       }).flatten(); //  Flattens collections of collections into a feature collection of those collections
-//       return LC_1;
-// }
-
-
-// /////////////////////////////////////////////////
-// // Landcover variables
-// /// From 'projects/sat-io/open-datasets/CA_FOREST_LC_VLCE2'
-// /////////////////////////////////////////////////////////////////////////
-
-// // feature_collection are the features you are extracting landcover data to 
-// exports.Landcover_focal_ts = function(feature_collection, Date_Start, Date_End, aoi, kernal_size) {
-//       var LC = ee.ImageCollection('projects/sat-io/open-datasets/CA_FOREST_LC_VLCE2').
-//       filterDate(Date_Start, Date_End).clip(aoi);
-      
-//       // Define the desired kernel radius in meters
-//       var radiusInMeters = kernal_size; // Adjust the size as needed
-      
-//       // Get the projection of the image
-//       var projection = LC.projection();
-
-
-//       // Calculate the equivalent radius in pixels based on the specified radius in meters
-//       var radiusInPixels = ee.Number(radiusInMeters).divide(projection.nominalScale()).round();
-
-//       // Create a circular kernel with an approximate radius
-//       var kernel = ee.Kernel.circle(radiusInPixels, 'pixels');
-
-//       // Set the fill value for pixels that do not equal the landcover class being assessed
-//       var fillValue = 0;
-
-//       var classValues = [0,20,31,32,33,40,50,80,81,100,210,220,230]; // Replace with your actual landcover class numbers
-//       var newClassNames = [
-//         "Unclassified",
-//         "Water",
-//         "Snow/Ice",
-//         "Rock/Rubble",
-//         "Exposed/Barren land",
-//         "Bryoids",
-//         "Shrubs",
-//         "Wetland",
-//         "Wetland-treed",
-//         "Herbs",
-//         "Coniferous",
-//         "Broadleaf",
-//         "Mixedwood"
-//         ];
-//       // Define the suffix you want to add to all band names
-        
-//       // Function to calculate class proportions within the kernel
-//       var calculateClassProportions = function(image) {
-//         var proportions = classValues.map(function(classValue) {
-//           var classCount = image.updateMask(image.eq(classValue)).reduce(ee.Reducer.count());
-//           var totalCount = image.reduce(ee.Reducer.count());
-//           var proportion = classCount.divide(totalCount).rename('Proportion_' + classValue);
-//           return proportion;
-//         });
-//         return ee.Image(proportions);
-//       };
-//       // Apply the function the landcover data
-//       var LC_proportions0 = calculateClassProportions(LC.neighborhoodToBands(kernel)).unmask(fillValue).clip(aoi);
-      
-//       var image=LC_proportions
-      
-//       var renameBands = function(image) {
-//         return ee.Image(classValues.map(function(value, index) {
-//           return image.select([index]).rename(newClassNames[index]);
-//         }));
-//       };
-      
-//       // Rename the bands using the renameBands function
-//       var LC_proportions_2 = renameBands(image);
-//       //print(LC_proportions_150)
-      
-//       // Add suffix to bandnames
-//       // Get the band names of the reduced image
-//       var bandNames = LC_proportions_2.bandNames();
-      
-//       // Define a function to add the kernel size to band names
-//       var addKernelSize = function(bandName) {
-//         return ee.String(bandName).cat("_").cat(ee.Number(radiusInMeters).format());
-//       };
-      
-//       // Rename the bands with the kernel size appended
-//       var LC_proportions_3 = LC_proportions_2.rename(bandNames.map(addKernelSize));
-
-//       return LC_proportions_3;
-// }
