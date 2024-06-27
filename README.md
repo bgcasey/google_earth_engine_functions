@@ -7,7 +7,7 @@ This repository contains a collection of reusable functions for processing and a
 ## File Index
 
 #### [annual_forest_land_cover.js](https://github.com/bgcasey/google_earth_engine_functions/blob/main/annual_forest_land_cover.js)
-Function to get annual landcover data from [High-resolution Annual Forest Land Cover Maps for Canada's Forested Ecosystems (1984-2019)] (https://gee-community-catalog.org/projects/ca_lc/)
+Function to get annual landcover data from [High-resolution Annual Forest Land Cover Maps for Canada's Forested Ecosystems (1984-2019)](https://gee-community-catalog.org/projects/ca_lc/)
 
 
 #### [geomorpho90m.js](https://github.com/bgcasey/google_earth_engine_functions/blob/main/geomorpho90m.js)
