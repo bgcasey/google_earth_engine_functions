@@ -9,6 +9,7 @@
  * The indices include vegetation, moisture, and stress-related 
  * indices. Masks are used for cloud, snow, and QA filtering.
  */
+ 
 /**
  * Adds Disease Stress Water Index (DSWI) band to an image.
  * @param {ee.Image} image - The input image.
