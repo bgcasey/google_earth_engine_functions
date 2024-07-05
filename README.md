@@ -33,3 +33,5 @@ Assorted utility functions e.g.:
 - combine lists of images into a single multi-band image
 - create time intervals
 - normalize images
+- summarize image collections to points
+- summarize images to points
