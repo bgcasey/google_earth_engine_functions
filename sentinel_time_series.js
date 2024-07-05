@@ -53,52 +53,70 @@ exports.s2_fn = function(dates, interval, intervalType, aoi, selectedIndices) {
     var s2Collection = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
                           .filterBounds(aoi)
                           .filterDate(start, end)
-                          .map(function(image) {
-                            return indices.maskS2clouds(image).clip(aoi);
-                          });
-    
-    // Apply selected indices to the collection
-    selectedIndices.forEach(function(index) {
-      switch(index) {
-        case 'NDVI':
-          s2Collection = s2Collection.map(indices.addNDVI);
-          break;
-        case 'NDMI':
-          s2Collection = s2Collection.map(indices.addNDWI); 
-          break;
-        case 'EVI':
-          s2Collection = s2Collection.map(indices.addEVI); 
-          break;
-        case 'SAVI':
-          s2Collection = s2Collection.map(indices.addSAVI); 
-          break;
-        case 'BSI':
-          s2Collection = s2Collection.map(indices.addBSI); 
-          break;
-        case 'SI':
-          s2Collection = s2Collection.map(indices.addSI); 
-          break;
-        case 'LAI':
-          s2Collection = s2Collection.map(indices.addLAI); 
-          break;
-        case 'DSWI':
-          s2Collection = s2Collection.map(indices.addDSWI);
-          break;
-        case 'DRS':
-          s2Collection = s2Collection.map(indices.addDRS);
-          break;
-        case 'NDRE3':
-          s2Collection = s2Collection.map(indices.addNDRE3);
-          break;
-        case 'NDRS':
-          s2Collection = s2Collection.map(indices.addNDRS);
-          break;
-        case 'RDI':
-          s2Collection = s2Collection.map(indices.addRDI);
-          break;
-        // Additional indices can be added here
-      }
-    });
+                          // Pre-filter to get less cloudy granules.
+                          .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20))
+                          .map(indices.maskS2clouds);
+
+// Apply selected indices to the collection
+selectedIndices.forEach(function(index) {
+  switch(index) {
+    case 'BSI':
+      s2Collection = s2Collection.map(indices.addBSI); 
+      break;
+    case 'CRE':
+      s2Collection = s2Collection.map(indices.addCRE);
+      break;
+    case 'DRS':
+      s2Collection = s2Collection.map(indices.addDRS);
+      break;
+    case 'DSWI':
+      s2Collection = s2Collection.map(indices.addDSWI);
+      break;
+    case 'EVI':
+      s2Collection = s2Collection.map(indices.addEVI); 
+      break;
+    case 'GNDVI':
+      s2Collection = s2Collection.map(indices.addGNDVI);
+      break;
+    case 'LAI':
+      s2Collection = s2Collection.map(indices.addLAI); 
+      break;
+    case 'NBR':
+      s2Collection = s2Collection.map(indices.addNBR);
+      break;
+    case 'NDMI':
+      s2Collection = s2Collection.map(indices.addNDWI); 
+      break;
+    case 'NDRE1':
+      s2Collection = s2Collection.map(indices.addNDRE1);
+      break;
+    case 'NDRE2':
+      s2Collection = s2Collection.map(indices.addNDRE2);
+      break;
+    case 'NDRE3':
+      s2Collection = s2Collection.map(indices.addNDRE3);
+      break;
+    case 'NDVI':
+      s2Collection = s2Collection.map(indices.addNDVI);
+      break;
+    case 'NDRS':
+      s2Collection = s2Collection.map(indices.addNDRS);
+      break;
+    case 'NDWI':
+      s2Collection = s2Collection.map(indices.addNDWI); 
+      break;  
+    case 'RDI':
+      s2Collection = s2Collection.map(indices.addRDI);
+      break;
+    case 'SAVI':
+      s2Collection = s2Collection.map(indices.addSAVI); 
+      break;
+    case 'SI':
+      s2Collection = s2Collection.map(indices.addSI); 
+      break;
+    // Additional indices can be added here
+  }
+});
     
     // Return median of collection with metadata
     return s2Collection

@@ -1,0 +1,60 @@
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+
+# User-specific files
+.Ruserdata
+
+# Example code in package build process
+*-Ex.R
+
+# Output files from R CMD build
+/*.tar.gz
+
+# Output files from R CMD check
+/*.Rcheck/
+
+# RStudio files
+.Rproj.user/
+
+# produced vignettes
+vignettes/*.html
+vignettes/*.pdf
+
+# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+.httr-oauth
+
+# knitr and R markdown default cache directories
+*_cache/
+/cache/
+
+# Temporary files created by R markdown
+*.utf8.md
+*.knit.md
+
+# R Environment Variables
+.Renviron
+
+0_gee_git_clone.sh
+
+depricated/
+
+
+# geomorpho90m.js
+HLI.js
+landcover_proportions.js
+# landsat_indices.js
+# landsat_time_series.js
+masks.js
+misc.js
+# sentinel_indices.js
+# sentinel_time_series.js
+timeseries_functions.js
+topoFunctions.js
+TPI.js
+# utils.js
+utils_aaz.js
+landsat_7_slc_gap_filling.js
