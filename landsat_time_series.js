@@ -1,9 +1,9 @@
 /**
- * Title: Get a Time Series of Landsat Images
- * Author: Brendan Casey
- * Date: 2024-06-23
+ * title: Get a Time Series of Landsat Images
+ * author: Brendan Casey
+ * date: 2024-06-23
  * 
- * Summary:
+ * description:
  * This script processes Landsat satellite imagery (Landsat 5, 7, 8, and 9),
  * harmonizes spectral reflectance values from different sensors,
  * calculates selected vegetation indices, and merges the results into a

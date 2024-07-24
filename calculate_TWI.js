@@ -1,8 +1,12 @@
 /**
+ * Title: "Calculate TWI"
+ * Author: "Brendan Casey"
+ * Created: "2024-07-01"
+ * Description:
  * Calculate the Topographic Wetness Index (TWI) for a given AOI.
  * TWI: ln(α / tan(β)), where α is upslope drainage area, β is slope.
  *
- * citation: Yamazaki D., D. Ikeshima, J. Sosa, P.D. Bates, 
+ * Data citation: Yamazaki D., D. Ikeshima, J. Sosa, P.D. Bates, 
  * G.H. Allen, T.M. Pavelsky. MERIT Hydro: A high-resolution global 
  * hydrography map based on latest topography datasets Water 
  * Resources Research, vol.55, pp.5053-5073, 2019, 
@@ -11,6 +15,7 @@
  * @param {ee.Geometry} aoi - Area of interest for TWI calculation.
  * @return {ee.Image} The calculated TWI image.
  */
+ 
 function calculateTWI(aoi) {
   // Load upslope area, clip to AOI, select 'upa' band
   var upslopeArea = ee.Image("MERIT/Hydro/v1_0_1")

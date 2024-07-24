@@ -1,8 +1,12 @@
 /**
+ * Title: "Get Canopy Height"
+ * Author: "Brendan Casey"
+ * Created: "2024-07-01"
+ * Description:
  * Load and combine global canopy height and its standard
  * deviation into a single image for a given AOI.
  * 
- * citation: Lang, Nico, Walter Jetz, Konrad Schindler, 
+ * data citation: Lang, Nico, Walter Jetz, Konrad Schindler, 
  * and Jan Dirk Wegner. "A high-resolution canopy height 
  * model of the Earth." arXiv preprint arXiv:2204.08322 (2022).
  *
@@ -10,6 +14,7 @@
  * @return {ee.Image} Combined canopy height and standard
  * deviation image.
  */
+ 
 function get_canopy_data(aoi) {
   // Load canopy height, rename, and clip to AOI
   var canopyHeight = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1')

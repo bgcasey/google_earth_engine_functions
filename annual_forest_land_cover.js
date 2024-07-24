@@ -1,13 +1,13 @@
 /**
- * Title: Get annual forest landcover classes
- * Author: Brendan Casey
- * Date: 2023-04-01
+ * title: Get annual forest landcover classes
+ * author: Brendan Casey
+ * date: 2023-04-01
  * 
- * Description: Function to get annual landcover data from 
+ * description: Function to get annual landcover data from 
  * High-resolution Annual Forest Land Cover Maps for
  * Canada's Forested Ecosystems (1984-2019)
  * 
- * Citation: Hermosilla, T., Wulder, M.A., White, J.C.,
+ * data citation: Hermosilla, T., Wulder, M.A., White, J.C.,
  * Coops, N.C., 2022. Land cover classification in an era
  * of big and open data: Optimizing localized implementation
  * and training data selection to improve mapping outcomes.

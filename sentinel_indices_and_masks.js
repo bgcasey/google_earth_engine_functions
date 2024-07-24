@@ -1,9 +1,9 @@
 /**
- * Title: Sentinel-2 Indices and Masks Functions
- * Date: 2024-06-01
- * Author: Brendan Casey
+ * title: Sentinel-2 Indices and Masks Functions
+ * author: Brendan Casey
+ * date: 2024-06-01
  * 
- * Summary:
+ * description:
  * This script defines functions to calculate various spectral 
  * indices and apply masks to a time series of Sentinel-2 images. 
  * The indices include vegetation, moisture, and stress-related 

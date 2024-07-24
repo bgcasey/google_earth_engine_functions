@@ -1,4 +1,27 @@
 /**
+ * title: Utility functions
+ * author: Brendan Casey
+ * date: 2024-06-23
+ * 
+ * description:
+ * This script provides utility functions for satellite imagery and 
+ * performing various geospatial analyses. The script includes functions 
+ * to:
+ * 
+ * 1. Convert degrees to radians.
+ * 2. Combine a list of images into a single multi-band image.
+ * 3. Normalize an image to a 0-1 scale.
+ * 4. Generate a list of dates for time series analysis.
+ * 5. Get visualization parameters for a band in an image.
+ * 6. Split an area of interest (AOI) into rectangular tiles.
+ * 7. Filter an image collection to include only images that contain 
+ *    specified bands.
+ * 8. Reduce an image to buffered points and export results.
+ * 9. Reduce an image collection to buffered points and export results.
+ */
+
+
+/**
  * Convert degrees to radians.
  * From https://github.com/aazuspan/geeTools
  * @param {ee.Number or ee.Image} deg An angle in degrees

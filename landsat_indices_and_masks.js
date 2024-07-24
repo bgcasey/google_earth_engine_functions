@@ -1,14 +1,14 @@
 /**
- * Title: Landsat Indices and Masks Functions
- * Date: 2024-06-01
- * Author: Brendan Casey
- * 
- * Summary:
+ * title: Landsat Indices and Masks Functions
+ * author: Brendan Casey
+ * areated: 2024-06-01
+ * description:
  * This script defines functions to calculate various spectral 
  * indices and apply masks to a time-series of Landsat images. 
  * The indices include vegetation, moisture, and stress-related 
  * indices. Masks are used for cloud, snow, and QA filtering.
  */
+ 
 // var utils = require("users/bgcasey/functions:utils");
 
 // Define Landsat indices functions

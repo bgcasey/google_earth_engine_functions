@@ -1,9 +1,9 @@
 /**
- * Title: Get a Time Series of Sentinel-2 Images
- * Author: Brendan Casey
- * Date: 2024-06-23
+ * title: Get a Time Series of Sentinel-2 Images
+ * author: Brendan Casey
+ * date: 2024-06-23
  * 
- * Summary:
+ * description:
  * This script processes Sentinel-2 satellite imagery, calculates selected
  * vegetation indices, and merges the results into a single image collection
  * for a specified time period and area of interest (AOI). 

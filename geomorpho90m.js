@@ -1,15 +1,18 @@
 /*
-Geomorpho90m:
-This script loads multiple geomorphometric variables from the 
-Geomorpho90m dataset, mosaics them, clips them to a specified area 
-of interest (aoi), and combines them into a single multiband image.
-
-Citation:
-Amatulli, Giuseppe, Daniel McInerney, Tushar Sethi, Peter Strobl, 
-and Sami Domisch. "Geomorpho90m, empirical evaluation and accuracy 
-assessment of global high-resolution geomorphometric layers." 
-Scientific Data 7, no. 1 (2020): 1-18.
-*/
+ * title: "Extract Geomorpho90m"
+ * author: "Brendan Casey"
+ * created: "2024-07-01"
+ * description:
+ * This script loads multiple geomorphometric variables from the 
+ * Geomorpho90m dataset, mosaics them, clips them to a specified area 
+ * of interest (aoi), and combines them into a single multiband image.
+ *
+ * Geomorpho90m Citation:
+ * Amatulli, Giuseppe, Daniel McInerney, Tushar Sethi, Peter Strobl, 
+ * and Sami Domisch. "Geomorpho90m, empirical evaluation and accuracy 
+ * assessment of global high-resolution geomorphometric layers." 
+ * Scientific Data 7, no. 1 (2020): 1-18.
+ */
 
 // Define the base path
 var basePath = "projects/sat-io/open-datasets/Geomorpho90m/";
