@@ -9,6 +9,11 @@ This repository contains a collection of reusable functions for processing and a
 #### [annual_forest_land_cover.js](https://github.com/bgcasey/google_earth_engine_functions/blob/main/annual_forest_land_cover.js)
 Function to get annual landcover data from [High-resolution Annual Forest Land Cover Maps for Canada's Forested Ecosystems (1984-2019)](https://gee-community-catalog.org/projects/ca_lc/)
 
+#### [calculate_TWI.js](https://github.com/bgcasey/google_earth_engine_functions/blob/main/calculate_TWI.js)
+Calculate the Topographic Wetness Index (TWI) for a given area of interest. TWI: ln(α / tan(β)), where α is upslope drainage area, β is slope.
+
+#### [canopy_height.js](https://github.com/bgcasey/google_earth_engine_functions/blob/main/canopy_height.js)
+Load and combine global [canopy height](https://gee-community-catalog.org/projects/canopy/) and its standard deviation into a single image for a given area of interest. 
 
 #### [geomorpho90m.js](https://github.com/bgcasey/google_earth_engine_functions/blob/main/geomorpho90m.js)
 This script loads multiple geomorphometric variables from the 
